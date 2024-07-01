@@ -8,17 +8,22 @@
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="88dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:layout_marginTop="88dp" />
+        android:textColor="@color/tanAccent"
+        android:textColorHint="@color/tanAccent" />
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/tanAccent"
+        android:textColorHint="@color/tanAccent" />
 
     <Button
         android:id="@+id/loginButton"
@@ -30,10 +35,10 @@
         android:id="@+id/registerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't have an account? Register here."
-        android:textColor="@color/purple_500"
         android:layout_gravity="center"
-        android:paddingTop="16dp"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:paddingTop="16dp"
+        android:text="Don't have an account? Register here."
+        android:textColor="@color/blueBlackFaded2" />
 </LinearLayout>

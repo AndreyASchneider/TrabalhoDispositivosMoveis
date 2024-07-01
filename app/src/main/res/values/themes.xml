@@ -2,15 +2,15 @@
     <!-- Base application theme. -->
     <style name="Theme.CodigoMorse" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/blueBlack</item> <!-- Primary brand color -->
+        <item name="colorOnPrimary">@color/tanAccent</item> <!-- Text or icons on primary color background -->
+        <item name="colorSecondary">@color/greenBlack</item> <!-- Secondary color for less prominent components -->
+        <item name="colorOnSecondary">@color/tanAccent</item> <!-- Text or icons on secondary color background -->
+        <item name="android:windowBackground">@color/black</item> <!-- Background color for screens -->
+        <item name="colorOnBackground">@color/tanAccent</item> <!-- Text or icons on background color -->
+        <item name="colorSurface">@color/blueBlack</item> <!-- Surface color for cards, sheets, and menus -->
+        <item name="colorOnSurface">@color/white</item> <!-- Text or icons on surface color -->
+        <item name="colorError">@color/error_red</item> <!-- Color for error states and icons -->
+        <item name="colorOnError">@color/white</item> <!-- Text or icons on error color -->
     </style>
 </resources>

@@ -7,4 +7,20 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="netflix_red">#E50914</color>
+    <color name="netflix_grey">#8C8C8C</color> <!-- A grey for secondary elements, lighter than the background -->
+    <color name="dark_grey">#333333</color> <!-- Dark grey for surfaces, offering contrast against black background -->
+    <color name="error_red">#D32F2F</color> <!-- A vibrant red to indicate errors or important actions -->
+    <color name="success">#FF00FF00</color>
+    <color name="failed">#FFFF0000</color>
+
+    <color name="blueBlack">#111f28</color>
+    <color name="tanAccent">#e3cdb3</color>
+    <color name="brownBlack">#281A11</color>
+    <color name="greenBlack">#3B7500</color> <!-- #1F2811 -->
+    <color name="blueBlackTranparent">#AA111f28</color>
+
+    <color name="blueBlackFaded">#315973</color>
+    <color name="blueBlackFaded2">#437A9D</color>
 </resources>

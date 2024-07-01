@@ -60,7 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         User user = userDAO.getUserByEmailAndPassword(email, password);
         if (user != null) {
             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+
             // Navegar para a próxima atividade
+            Intent intent = new Intent(this, MenuActivity.class);
+            intent.putExtra("teste", 1);
+            startActivity(intent);
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }
