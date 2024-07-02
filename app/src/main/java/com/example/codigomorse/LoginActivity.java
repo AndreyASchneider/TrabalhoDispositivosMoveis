@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
             // Navegar para a próxima atividade
             Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra("teste", 1);
+            intent.putExtra("usuarioId", user.getId());
             startActivity(intent);
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();

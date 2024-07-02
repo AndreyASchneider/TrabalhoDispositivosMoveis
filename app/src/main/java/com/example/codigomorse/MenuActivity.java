@@ -13,6 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.codigomorse.model.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private List<String> codeTypes = new ArrayList<>();
     private int codeTypeIndex;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,9 @@ public class MenuActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("usuarioId");
 
         setupCodeTypes();
 
@@ -50,6 +56,7 @@ public class MenuActivity extends AppCompatActivity {
     public void onStartGame(View view) {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("codeType", codeTypes.get(codeTypeIndex));
+        intent.putExtra("user", userId);
         startActivity(intent);
     }
 

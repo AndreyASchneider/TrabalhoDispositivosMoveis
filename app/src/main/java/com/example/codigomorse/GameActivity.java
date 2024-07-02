@@ -34,6 +34,7 @@ public class GameActivity extends AppCompatActivity {
     private String answer = "";
     private String question = "";
     private String codeType;
+    private String userId;
     private Map<Character, String> codeMap = new HashMap<>();
     private List<EnableLetterItem> enableLetterItemList = new ArrayList<>();
 
@@ -54,10 +55,12 @@ public class GameActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("codeType"))
+        if (intent != null && intent.hasExtra("codeType")) {
             codeType = intent.getStringExtra("codeType");
-        else
+            userId = intent.getStringExtra("user");
+        } else {
             codeType = "Morse";
+        }
 
         createCodeTypeMap();
         createEnabledLettersList();
@@ -259,7 +262,9 @@ public class GameActivity extends AppCompatActivity {
 
     public void goToSaveScore(View view) {
         Intent intent = new Intent(this, SaveScoreActivity.class);
-        intent.putParcelableArrayListExtra("itemList", new ArrayList<>(enableLetterItemList));
-        resultLauncher.launch(intent);
+        intent.putExtra("user", userId);
+        intent.putExtra("level", level);
+        intent.putExtra("language", codeType);
+        startActivity(intent);
     }
 }

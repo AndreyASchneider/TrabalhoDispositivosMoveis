@@ -12,13 +12,12 @@ public class Score {
     public Score() {
     }
 
-    public Score(String pontuation, int userId, String foto, String location, int languageId, String dateCreate) {
+    public Score(String pontuation, int userId, String foto, String location, int languageId) {
         this.pontuation = pontuation;
         this.userId = userId;
         this.foto = foto;
         this.location = location;
         this.languageId = languageId;
-        this.dateCreate = dateCreate;
     }
 
     public Score(int id, String pontuation, int userId, String foto, String location, int languageId, String dateCreate) {
@@ -28,7 +27,6 @@ public class Score {
         this.foto = foto;
         this.location = location;
         this.languageId = languageId;
-        this.dateCreate = dateCreate;
     }
 
     public int getId() {
@@ -81,9 +79,5 @@ public class Score {
 
     public String getDateCreate() {
         return dateCreate;
-    }
-
-    public void setDateCreate(String dateCreate) {
-        this.dateCreate = dateCreate;
     }
 }
