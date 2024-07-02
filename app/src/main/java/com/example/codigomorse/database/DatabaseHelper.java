@@ -32,6 +32,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_ID_SCORE = "user_id";
     public static final String COLUMN_FOTO = "foto";
     public static final String COLUMN_LOCATION = "location";
+    public static final String COLUMN_LANGUAGE_ID_SCORE = "language_id";
+    public static final String COLUMN_DATE_CREATE_SCORE = "date_create";
 
     // Tabelas e colunas da tabela languages
     public static final String TABLE_LANGUAGES = "languages";
@@ -62,7 +64,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_USER_ID_SCORE + " INTEGER,"
             + COLUMN_FOTO + " TEXT,"
             + COLUMN_LOCATION + " TEXT,"
-            + "FOREIGN KEY(" + COLUMN_USER_ID_SCORE + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_USER_ID + ")"
+            + COLUMN_LANGUAGE_ID_SCORE + " INTEGER,"
+            + COLUMN_DATE_CREATE_SCORE + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
+            + "FOREIGN KEY(" + COLUMN_USER_ID_SCORE + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_USER_ID + "),"
+            + "FOREIGN KEY(" + COLUMN_LANGUAGE_ID_SCORE + ") REFERENCES " + TABLE_LANGUAGES + "(" + COLUMN_LANGUAGE_ID + ")"
             + ")";
 
     private static final String CREATE_TABLE_LANGUAGES = "CREATE TABLE " + TABLE_LANGUAGES + "("

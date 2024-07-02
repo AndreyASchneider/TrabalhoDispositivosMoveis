@@ -23,6 +23,8 @@ public class ScoreDAO {
         values.put(DatabaseHelper.COLUMN_USER_ID_SCORE, score.getUserId());
         values.put(DatabaseHelper.COLUMN_FOTO, score.getFoto());
         values.put(DatabaseHelper.COLUMN_LOCATION, score.getLocation());
+        values.put(DatabaseHelper.COLUMN_LANGUAGE_ID_SCORE, score.getLanguageId());
+        values.put(DatabaseHelper.COLUMN_DATE_CREATE_SCORE, score.getDateCreate());
         long id = db.insert(DatabaseHelper.TABLE_SCORES, null, values);
         db.close();
         return id;
@@ -40,7 +42,9 @@ public class ScoreDAO {
                     cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PONTUATION)),
                     cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_USER_ID_SCORE)),
                     cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FOTO)),
-                    cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_LOCATION))
+                    cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_LOCATION)),
+                    cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_LANGUAGE_ID_SCORE)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE_CREATE_SCORE))
             );
             cursor.close();
         }

@@ -6,23 +6,29 @@ public class Score {
     private int userId;
     private String foto;
     private String location;
+    private int languageId;
+    private String dateCreate;
 
     public Score() {
     }
 
-    public Score(String pontuation, int userId, String foto, String location) {
+    public Score(String pontuation, int userId, String foto, String location, int languageId, String dateCreate) {
         this.pontuation = pontuation;
         this.userId = userId;
         this.foto = foto;
         this.location = location;
+        this.languageId = languageId;
+        this.dateCreate = dateCreate;
     }
 
-    public Score(int id, String pontuation, int userId, String foto, String location) {
+    public Score(int id, String pontuation, int userId, String foto, String location, int languageId, String dateCreate) {
         this.id = id;
         this.pontuation = pontuation;
         this.userId = userId;
         this.foto = foto;
         this.location = location;
+        this.languageId = languageId;
+        this.dateCreate = dateCreate;
     }
 
     public int getId() {
@@ -63,5 +69,21 @@ public class Score {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(int languageId) {
+        this.languageId = languageId;
+    }
+
+    public String getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(String dateCreate) {
+        this.dateCreate = dateCreate;
     }
 }
