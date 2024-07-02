@@ -256,4 +256,10 @@ public class GameActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra("itemList", new ArrayList<>(enableLetterItemList));
         resultLauncher.launch(intent);
     }
+
+    public void onSaveScore(View view) {
+        Intent intent = new Intent(this, SaveScoreActivity.class);
+        intent.putParcelableArrayListExtra("itemList", new ArrayList<>(enableLetterItemList));
+        resultLauncher.launch(intent);
+    }
 }
