@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -35,12 +34,6 @@ android {
     }
 }
 
-buildscript {
-    dependencies {
-        classpath(libs.secrets.gradle.plugin);
-    }
-}
-
 dependencies {
 
     implementation(libs.appcompat)
@@ -51,7 +44,6 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.activity)
-    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -59,11 +51,5 @@ dependencies {
     implementation("androidx.sqlite:sqlite:2.1.0")
     implementation("androidx.sqlite:sqlite-framework:2.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.0-alpha01")
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
-}
 
-secrets {
-    propertiesFileName = "secrets.properties"
-
-    defaultPropertiesFileName = "local.default.properties"
 }
