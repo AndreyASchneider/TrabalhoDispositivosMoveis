@@ -116,6 +116,7 @@ public class UserDAO {
         );
         if (cursor != null && cursor.moveToFirst()) {
             @SuppressLint("Range") User user = new User(
+                    cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID)),
                     cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_EMAIL)),
                     cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_PASSWORD))
             );

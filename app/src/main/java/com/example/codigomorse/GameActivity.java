@@ -18,7 +18,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.codigomorse.database.EnabledLetterDAO;
+import com.example.codigomorse.database.LanguageDAO;
 import com.example.codigomorse.entity.EnableLetterItem;
+import com.example.codigomorse.model.EnabledLetter;
+import com.example.codigomorse.model.Language;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -31,10 +35,14 @@ import java.util.stream.IntStream;
 
 public class GameActivity extends AppCompatActivity {
 
+    private LanguageDAO languageDAO;
+    private EnabledLetterDAO enabledLetterDAO;
+
     private String answer = "";
     private String question = "";
-    private String codeType;
-    private String userId;
+
+    private int userId;
+    private Language language;
     private Map<Character, String> codeMap = new HashMap<>();
     private List<EnableLetterItem> enableLetterItemList = new ArrayList<>();
 
@@ -54,15 +62,23 @@ public class GameActivity extends AppCompatActivity {
             return insets;
         });
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("codeType")) {
-            codeType = intent.getStringExtra("codeType");
-            userId = intent.getStringExtra("user");
-        } else {
-            codeType = "Morse";
-        }
+        languageDAO = new LanguageDAO(this);
+        enabledLetterDAO = new EnabledLetterDAO(this);
 
-        createCodeTypeMap();
+        Intent intent = getIntent();
+
+        if (intent != null && intent.hasExtra("userId"))
+            userId = intent.getIntExtra("userId", -1);
+
+        int languageId;
+        if (intent != null && intent.hasExtra("languageId"))
+            languageId = intent.getIntExtra("languageId", 1);
+        else
+            languageId = 1;
+
+        language = languageDAO.getLanguageById(languageId);
+
+        codeMap = createCodeTypeMap();
         createEnabledLettersList();
 
         resultLauncher = registerForActivityResult(
@@ -75,114 +91,65 @@ public class GameActivity extends AppCompatActivity {
                             if (resultList != null) {
                                 enableLetterItemList.clear();
                                 enableLetterItemList.addAll(resultList);
+                                updateEnabledLetters();
                             }
                         }
                     }
                 }
         );
 
+        onReset(null);
+
         setNewQuestion();
     }
 
-    public void createCodeTypeMap(){
-        if(codeType.equals("Morse")){
-            codeMap = new HashMap<>();
-            codeMap.put('A', ".-");
-            codeMap.put('B', "-...");
-            codeMap.put('C', "-.-.");
-            codeMap.put('D', "-..");
-            codeMap.put('E', ".");
-            codeMap.put('F', "..-.");
-            codeMap.put('G', "--.");
-            codeMap.put('H', "....");
-            codeMap.put('I', "..");
-            codeMap.put('J', ".---");
-            codeMap.put('K', "-.-");
-            codeMap.put('L', ".-..");
-            codeMap.put('M', "--");
-            codeMap.put('N', "-.");
-            codeMap.put('O', "---");
-            codeMap.put('P', ".--.");
-            codeMap.put('Q', "--.-");
-            codeMap.put('R', ".-.");
-            codeMap.put('S', "...");
-            codeMap.put('T', "-");
-            codeMap.put('U', "..-");
-            codeMap.put('V', "...-");
-            codeMap.put('W', ".--");
-            codeMap.put('X', "-..-");
-            codeMap.put('Y', "-.--");
-            codeMap.put('Z', "--..");
-        } else if(codeType.equals("Binary")){
-            codeMap.put('A', "01000001");
-            codeMap.put('B', "01000010");
-            codeMap.put('C', "01000011");
-            codeMap.put('D', "01000100");
-            codeMap.put('E', "01000101");
-            codeMap.put('F', "01000110");
-            codeMap.put('G', "01000111");
-            codeMap.put('H', "01001000");
-            codeMap.put('I', "01001001");
-            codeMap.put('J', "01001010");
-            codeMap.put('K', "01001011");
-            codeMap.put('L', "01001100");
-            codeMap.put('M', "01001101");
-            codeMap.put('N', "01001110");
-            codeMap.put('O', "01001111");
-            codeMap.put('P', "01010000");
-            codeMap.put('Q', "01010001");
-            codeMap.put('R', "01010010");
-            codeMap.put('S', "01010011");
-            codeMap.put('T', "01010100");
-            codeMap.put('U', "01010101");
-            codeMap.put('V', "01010110");
-            codeMap.put('W', "01010111");
-            codeMap.put('X', "01011000");
-            codeMap.put('Y', "01011001");
-            codeMap.put('Z', "01011010");
-            codeMap.put('0', "00110000");
-            codeMap.put('1', "00110001");
-            codeMap.put('2', "00110010");
-            codeMap.put('3', "00110011");
-            codeMap.put('4', "00110100");
-            codeMap.put('5', "00110101");
-            codeMap.put('6', "00110110");
-            codeMap.put('7', "00110111");
-            codeMap.put('8', "00111000");
-            codeMap.put('9', "00111001");
-        } else if(codeType.equals("Tap Code")){
-            codeMap.put('A', ". .");
-            codeMap.put('B', ". ..");
-            codeMap.put('C', ". ...");
-            //codeMap.put('K', "13");
-            codeMap.put('D', ". ....");
-            codeMap.put('E', ". .....");
-            codeMap.put('F', ".. .");
-            codeMap.put('G', ".. ..");
-            codeMap.put('H', ".. ...");
-            codeMap.put('I', ".. ....");
-            codeMap.put('J', ".. .....");
-            codeMap.put('L', "... .");
-            codeMap.put('M', "... ..");
-            codeMap.put('N', "... ...");
-            codeMap.put('O', "... ....");
-            codeMap.put('P', "... .....");
-            codeMap.put('Q', ".... .");
-            codeMap.put('R', ".... ..");
-            codeMap.put('S', ".... ...");
-            codeMap.put('T', ".... ....");
-            codeMap.put('U', ".... .....");
-            codeMap.put('V', "..... .");
-            codeMap.put('W', "..... ..");
-            codeMap.put('X', "..... ...");
-            codeMap.put('Y', "..... ....");
-            codeMap.put('Z', "..... .....");
+    public Map<Character, String> createCodeTypeMap(){
+        return createTranslationMap(language.getLetters(), language.getTranslations());
+    }
+
+    public static Map<Character, String> createTranslationMap(String letters, String translations) {
+        Map<Character, String> translationMap = new HashMap<>();
+
+        String[] letterArray = letters.split(";");
+        String[] translationArray = translations.split(";");
+
+        if (letterArray.length != translationArray.length) {
+            throw new IllegalArgumentException("The number of letters and translations must be the same.");
         }
+
+        for (int i = 0; i < letterArray.length; i++) {
+            if (letterArray[i].length() != 1) {
+                throw new IllegalArgumentException("Each entry in the letters string should be a single character.");
+            }
+            translationMap.put(letterArray[i].charAt(0), translationArray[i]);
+        }
+
+        return translationMap;
     }
 
     private void createEnabledLettersList() {
         enableLetterItemList.clear();
-        codeMap.forEach((key, value) -> enableLetterItemList.add(new EnableLetterItem(null, codeType, key, value, true)));
+        codeMap.forEach((key, value) -> enableLetterItemList.add(new EnableLetterItem(key, value, false)));
+
+        EnabledLetter enabledLetter = enabledLetterDAO.getEnabledLetterByUserIdAndLanguageId(userId, language.getId());
+
+        String[] letterArray = enabledLetter.getLetters().split(";");
+
+        for (int i = 0; i < letterArray.length; i++) {
+            if (letterArray[i].length() != 1) {
+                throw new IllegalArgumentException("Each entry in the letters string should be a single character.");
+            }
+
+            int index = i;
+            enableLetterItemList.stream().filter(x -> x.getLetter().equals(letterArray[index].charAt(0))).findFirst().ifPresent(item -> item.setEnabled(true));
+        }
+    }
+
+    public void updateEnabledLetters(){
+        String concatLetters = enableLetterItemList.stream().filter(EnableLetterItem::isEnabled).map(x -> x.getLetter().toString()).collect(Collectors.joining(";"));
+
+        EnabledLetter enabledLetterUpdated = new EnabledLetter(userId, language.getId(), concatLetters);
+        enabledLetterDAO.updateEnabledLetterByUserIdAndLanguageId(enabledLetterUpdated);
     }
 
     public void onConfirm(View view) {
@@ -241,7 +208,7 @@ public class GameActivity extends AppCompatActivity {
                 .map(letter -> codeMap.getOrDefault(letter, ""))
                 .collect(Collectors.joining(" "));
 
-        System.out.println("Question (" + codeType + "): " + question + ", Answer (Letter): " + answer);
+        System.out.println("Question (" + language.getName() + "): " + question + ", Answer (Letter): " + answer);
 
         renderQuestion();
     }
@@ -262,9 +229,13 @@ public class GameActivity extends AppCompatActivity {
 
     public void goToSaveScore(View view) {
         Intent intent = new Intent(this, SaveScoreActivity.class);
-        intent.putExtra("user", userId);
-        intent.putExtra("level", level);
-        intent.putExtra("language", codeType);
+        intent.putExtra("userId", userId);
+        intent.putExtra("scorePoints", level);
+        intent.putExtra("languageId", language.getId());
         startActivity(intent);
+    }
+
+    public void onExitGameAct(View view){
+        finish();
     }
 }

@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.codigomorse"
-        minSdk = 34
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -51,5 +51,7 @@ dependencies {
     implementation("androidx.sqlite:sqlite:2.1.0")
     implementation("androidx.sqlite:sqlite-framework:2.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.0-alpha01")
+    implementation("com.google.android.gms:play-services-maps:18.0.2")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
 }

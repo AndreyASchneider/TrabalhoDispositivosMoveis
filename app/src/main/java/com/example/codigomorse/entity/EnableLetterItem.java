@@ -11,6 +11,14 @@ public class EnableLetterItem implements Parcelable {
     private String translation;
     private boolean enabled;
 
+    public EnableLetterItem(Character letter, String translation, boolean enabled) {
+        this.userId = 0;
+        this.codeType = "";
+        this.letter = letter;
+        this.translation = translation;
+        this.enabled = enabled;
+    }
+
     public EnableLetterItem(Integer userId, String codeType, Character letter, String translation, boolean enabled) {
         this.userId = userId;
         this.codeType = codeType;

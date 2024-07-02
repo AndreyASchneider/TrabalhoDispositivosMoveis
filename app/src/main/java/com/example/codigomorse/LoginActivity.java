@@ -61,9 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
 
-            // Navegar para a próxima atividade
             Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra("usuarioId", user.getId());
+            intent.putExtra("userId", user.getId());
             startActivity(intent);
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();

@@ -14,6 +14,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.codigomorse.model.User;
+import com.example.codigomorse.database.EnabledLetterDAO;
+import com.example.codigomorse.database.LanguageDAO;
+import com.example.codigomorse.database.UserDAO;
+import com.example.codigomorse.model.EnabledLetter;
+import com.example.codigomorse.model.Language;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +28,13 @@ import java.util.stream.Collectors;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private List<String> codeTypes = new ArrayList<>();
+    private LanguageDAO languageDAO;
+    private EnabledLetterDAO enabledLetterDAO;
+
     private int codeTypeIndex;
-    private String userId;
+    private int userId;
+
+    private List<Language> languages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,30 +47,36 @@ public class MenuActivity extends AppCompatActivity {
             return insets;
         });
 
-        Intent intent = getIntent();
-        userId = intent.getStringExtra("usuarioId");
+        languageDAO = new LanguageDAO(this);
+        enabledLetterDAO = new EnabledLetterDAO(this);
 
-        setupCodeTypes();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("userId"))
+            userId = intent.getIntExtra("userId", -1);
+
+        setupAllDefaultValues();
+
+        loadLanguages();
 
         updateCodeType(0);
+
+        ((ImageView) findViewById(R.id.imgScoreList)).setColorFilter(ContextCompat.getColor(this, R.color.blueBlackFaded), android.graphics.PorterDuff.Mode.MULTIPLY);
     }
 
-    public void setupCodeTypes(){
-        codeTypes = new ArrayList<>();
-        codeTypes.add("Morse");
-        codeTypes.add("Binary");
-        codeTypes.add("Tap Code");
+    private void loadLanguages(){
+        languages = languageDAO.getAllLanguages();
     }
 
     public void onStartGame(View view) {
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra("codeType", codeTypes.get(codeTypeIndex));
-        intent.putExtra("user", userId);
+        intent.putExtra("codeType", languages.get(codeTypeIndex).getName());
+        intent.putExtra("languageId", languages.get(codeTypeIndex).getId());
+        intent.putExtra("userId", userId);
         startActivity(intent);
     }
 
     public void onClickArrowRight(View view){
-        if(codeTypeIndex >= codeTypes.size() - 1)
+        if(codeTypeIndex >= languages.size() - 1)
             return;
 
         updateCodeType(codeTypeIndex + 1);
@@ -77,14 +92,14 @@ public class MenuActivity extends AppCompatActivity {
     public void updateCodeType(int newCodeType){
         codeTypeIndex = newCodeType;
 
-        ((TextView) findViewById(R.id.lblCodeType)).setText(codeTypes.get(codeTypeIndex));
+        ((TextView) findViewById(R.id.lblCodeType)).setText(languages.get(codeTypeIndex).getName());
 
         if(codeTypeIndex == 0)
             ((ImageView) findViewById(R.id.imgSelectModeLeft)).setColorFilter(ContextCompat.getColor(this, R.color.blueBlack), android.graphics.PorterDuff.Mode.MULTIPLY);
         else
             ((ImageView) findViewById(R.id.imgSelectModeLeft)).setColorFilter(ContextCompat.getColor(this, R.color.blueBlackFaded), android.graphics.PorterDuff.Mode.MULTIPLY);
 
-        if(codeTypeIndex == codeTypes.size() - 1)
+        if(codeTypeIndex == languages.size() - 1)
             ((ImageView) findViewById(R.id.imgSelectModeRight)).setColorFilter(ContextCompat.getColor(this, R.color.blueBlack), android.graphics.PorterDuff.Mode.MULTIPLY);
         else
             ((ImageView) findViewById(R.id.imgSelectModeRight)).setColorFilter(ContextCompat.getColor(this, R.color.blueBlackFaded), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -108,109 +123,101 @@ public class MenuActivity extends AppCompatActivity {
 
         TextView viewBackgroundText = findViewById(R.id.lblBackgroundText);
         viewBackgroundText.setText(encr);
-        if(codeTypes.get(codeTypeIndex).equals("Binary"))
+        if(languages.get(codeTypeIndex).getName().equals("Binary"))
             viewBackgroundText.setTextSize(20);
         else
             viewBackgroundText.setTextSize(30);
     }
 
     public Map<Character, String> createCodeTypeMap(){
-        Map<Character, String> codeMap = new HashMap<>();
+        Language lang = languages.get(codeTypeIndex);
 
-        if(codeTypes.get(codeTypeIndex).equals("Morse")){
-            codeMap = new HashMap<>();
-            codeMap.put('A', ".-");
-            codeMap.put('B', "-...");
-            codeMap.put('C', "-.-.");
-            codeMap.put('D', "-..");
-            codeMap.put('E', ".");
-            codeMap.put('F', "..-.");
-            codeMap.put('G', "--.");
-            codeMap.put('H', "....");
-            codeMap.put('I', "..");
-            codeMap.put('J', ".---");
-            codeMap.put('K', "-.-");
-            codeMap.put('L', ".-..");
-            codeMap.put('M', "--");
-            codeMap.put('N', "-.");
-            codeMap.put('O', "---");
-            codeMap.put('P', ".--.");
-            codeMap.put('Q', "--.-");
-            codeMap.put('R', ".-.");
-            codeMap.put('S', "...");
-            codeMap.put('T', "-");
-            codeMap.put('U', "..-");
-            codeMap.put('V', "...-");
-            codeMap.put('W', ".--");
-            codeMap.put('X', "-..-");
-            codeMap.put('Y', "-.--");
-            codeMap.put('Z', "--..");
-        } else if(codeTypes.get(codeTypeIndex).equals("Binary")){
-            codeMap.put('A', "01000001");
-            codeMap.put('B', "01000010");
-            codeMap.put('C', "01000011");
-            codeMap.put('D', "01000100");
-            codeMap.put('E', "01000101");
-            codeMap.put('F', "01000110");
-            codeMap.put('G', "01000111");
-            codeMap.put('H', "01001000");
-            codeMap.put('I', "01001001");
-            codeMap.put('J', "01001010");
-            codeMap.put('K', "01001011");
-            codeMap.put('L', "01001100");
-            codeMap.put('M', "01001101");
-            codeMap.put('N', "01001110");
-            codeMap.put('O', "01001111");
-            codeMap.put('P', "01010000");
-            codeMap.put('Q', "01010001");
-            codeMap.put('R', "01010010");
-            codeMap.put('S', "01010011");
-            codeMap.put('T', "01010100");
-            codeMap.put('U', "01010101");
-            codeMap.put('V', "01010110");
-            codeMap.put('W', "01010111");
-            codeMap.put('X', "01011000");
-            codeMap.put('Y', "01011001");
-            codeMap.put('Z', "01011010");
-            codeMap.put('0', "00110000");
-            codeMap.put('1', "00110001");
-            codeMap.put('2', "00110010");
-            codeMap.put('3', "00110011");
-            codeMap.put('4', "00110100");
-            codeMap.put('5', "00110101");
-            codeMap.put('6', "00110110");
-            codeMap.put('7', "00110111");
-            codeMap.put('8', "00111000");
-            codeMap.put('9', "00111001");
-        } else if(codeTypes.get(codeTypeIndex).equals("Tap Code")){
-            codeMap.put('A', ". .");
-            codeMap.put('B', ". ..");
-            codeMap.put('C', ". ...");
-            //codeMap.put('K', "13");
-            codeMap.put('D', ". ....");
-            codeMap.put('E', ". .....");
-            codeMap.put('F', ".. .");
-            codeMap.put('G', ".. ..");
-            codeMap.put('H', ".. ...");
-            codeMap.put('I', ".. ....");
-            codeMap.put('J', ".. .....");
-            codeMap.put('L', "... .");
-            codeMap.put('M', "... ..");
-            codeMap.put('N', "... ...");
-            codeMap.put('O', "... ....");
-            codeMap.put('P', "... .....");
-            codeMap.put('Q', ".... .");
-            codeMap.put('R', ".... ..");
-            codeMap.put('S', ".... ...");
-            codeMap.put('T', ".... ....");
-            codeMap.put('U', ".... .....");
-            codeMap.put('V', "..... .");
-            codeMap.put('W', "..... ..");
-            codeMap.put('X', "..... ...");
-            codeMap.put('Y', "..... ....");
-            codeMap.put('Z', "..... .....");
-        }
+        Map<Character, String> codeMap = createTranslationMap(lang.getLetters(), lang.getTranslations());
 
         return codeMap;
+    }
+
+    public static Map<Character, String> createTranslationMap(String letters, String translations) {
+        Map<Character, String> translationMap = new HashMap<>();
+
+        String[] letterArray = letters.split(";");
+        String[] translationArray = translations.split(";");
+
+        if (letterArray.length != translationArray.length) {
+            throw new IllegalArgumentException("The number of letters and translations must be the same.");
+        }
+
+        for (int i = 0; i < letterArray.length; i++) {
+            if (letterArray[i].length() != 1) {
+                throw new IllegalArgumentException("Each entry in the letters string should be a single character.");
+            }
+            translationMap.put(letterArray[i].charAt(0), translationArray[i]);
+        }
+
+        return translationMap;
+    }
+
+    public void setupAllDefaultValues(){
+        List<Language> defaultLanguages = getDefaultLanguages();
+
+        for(Language defLang : defaultLanguages){
+            languageDAO.addLanguageIfNotExists(defLang);
+        }
+
+        List<Language> actualLanguages = languageDAO.getAllLanguages();
+
+        for(Language lang : actualLanguages){
+            EnabledLetter enabledLetter = new EnabledLetter();
+            enabledLetter.setUserId(userId);
+            enabledLetter.setLanguageId(lang.getId());
+            enabledLetter.setLetters(lang.getLetters());
+
+            enabledLetterDAO.addEnabledLetterIfNotExists(enabledLetter);
+        }
+    }
+
+    public List<Language> getDefaultLanguages(){
+        List<Language> defaultLanguages = new ArrayList<>();
+
+        Language morse = new Language();
+        morse.setName("Morse");
+        morse.setLetters("A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z");
+        morse.setTranslations(".-;-...;-.-.;-..;.;..-.;--.;....;..;.---;-.-;.-..;--;-.;---;.--.;--.-;.-.;...;-;..-;...-;.--;-..-;-.--;--..");
+        defaultLanguages.add(morse);
+
+        Language binary = new Language();
+        binary.setName("Binary");
+        binary.setLetters("A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;0;1;2;3;4;5;6;7;8;9");
+        binary.setTranslations("01000001;01000010;01000011;01000100;01000101;01000110;01000111;01001000;01001001;01001010;01001011;01001100;01001101;01001110;01001111;01010000;01010001;01010010;01010011;01010100;01010101;01010110;01010111;01011000;01011001;01011010;00110000;00110001;00110010;00110011;00110100;00110101;00110110;00110111;00111000;00111001");
+        defaultLanguages.add(binary);
+
+        Language tapCode = new Language();
+        tapCode.setName("Tap Code");
+        tapCode.setLetters("A;B;C;D;E;F;G;H;I;J;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z");
+        tapCode.setTranslations(". .;. ..;. ...;. ....;. .....;.. .;.. ..;.. ...;.. ....;.. .....;... .;... ..;... ...;... ....;... .....;.... .;.... ..;.... ...;.... ....;.... .....;..... .;..... ..;..... ...;..... ....;..... .....");
+        defaultLanguages.add(tapCode);
+
+        Language braille = new Language();
+        braille.setName("Braille");
+        braille.setLetters("A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z");
+        braille.setTranslations("⠁;⠃;⠉;⠙;⠑;⠋;⠛;⠓;⠊;⠚;⠅;⠇;⠍;⠝;⠕;⠏;⠟;⠗;⠎;⠞;⠥;⠧;⠺;⠭;⠽;⠵");
+        defaultLanguages.add(braille);
+
+        return defaultLanguages;
+    }
+
+    public void onClickImgScoreList(View view){
+        openScoreList();
+    }
+
+    public void onClickBackgroundText(View view){
+
+    }
+
+    public void openScoreList(){
+        Intent intent = new Intent(this, ScoreListActivity.class);
+        intent.putExtra("languageId", languages.get(codeTypeIndex).getId());
+        intent.putExtra("userId", userId);
+        startActivity(intent);
     }
 }
